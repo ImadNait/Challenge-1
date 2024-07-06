@@ -2,14 +2,35 @@ const express = require("express");
 const  Character  = require("../models/charModel");
 const router = express.Router();
 //Get All game characters
-const getAll = async (req, res) => {
+const getAll = async  (req, res) => {
     try {
-        const characters = await Character.find();
+        const page = parseInt(req.query.page);
+        const limit = req.query.limit
+
+        const startIndex = (page -1)*limit
+        const endIndex = page * limit
+        const results ={}
+        const characters = await Character.find()
+        if(startIndex > 0 ){
+        results.previous = {
+            page:page - 1,
+            limit:limit
+        }}
+        results.results = characters.slice(startIndex, endIndex)
+        
+
+                if(endIndex < characters.length){
+        results.next = {
+            page:page + 1,
+            limit:limit
+        }}
+
         if(characters.length===0){
             return res.status(404).json({message:"Character Not Found."})
         }
-        res.status(200).json(characters); 
-    } catch (err) {
+        res.status(200).json(results); 
+        
+    }catch (err) {
         res.status(500).json({ message: err.message })
 }};
 //Get character by his ID
