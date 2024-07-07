@@ -3,6 +3,7 @@ const { getAll, create, update, Delete, getById, getByName } = require("../contr
 const { logReq } = require("../middlewares/Logs");
 // exporting the validation for Post and Put
 const { validateUser } = require('../middlewares/Validation');
+//Routers
 const router = express.Router();
 router.get("/",getAll)
 router.get("/:id",getById)
